@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/backgroundcolor"
+    android:orientation="vertical"
+    android:gravity="center"
+    tools:context=".MainActivity">
+
+    <Button
+        android:id="@+id/btnBooktag"
+        android:layout_width="250dp"
+        android:layout_height="80dp"
+        android:background="#00000000"
+        android:layout_marginBottom="100dp"
+        android:textAllCaps="false"
+        android:textSize="40dp"
+        android:text="내 서재"/>
+
+    <Button
+        android:id="@+id/btnDataIn"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="10dp"
+        android:background="#00000000"
+        android:text="문서 관리"
+        android:textSize="20dp" />
+
+    <Button
+        android:id="@+id/btnUserInfo"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:background="#00000000"
+        android:textSize="20dp"
+        android:text="사용자 정보"/>
+
+    <Button
+        android:id="@+id/btnEnd"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:background="#00000000"
+        android:textSize="20dp"
+        android:text="종료"/>
+
+
+
+
+
+</LinearLayout>
