@@ -9,6 +9,8 @@
 
     </style>
 
+
+
     <style name="bbookkTeme" parent="Theme.AppCompat.Light.NoActionBar">
 
     </style>
@@ -17,7 +19,7 @@
 
     </style>
 
-    <style name="adadaaa" parent="Theme.AppCompat.DayNight.DarkActionBar">
+    <style name="MyAppTheme" parent="Theme.AppCompat.DayNight.DarkActionBar">
 
     </style>
 

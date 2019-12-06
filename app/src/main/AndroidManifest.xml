@@ -10,7 +10,7 @@
         android:label="BookTag"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/aadsddadadd">
+        android:theme="@style/MyAppTheme">
         <activity android:name=".FileDeleteActivity"></activity>
         <activity android:name=".FileUpgradeActivity" />
         <activity android:name=".DataInActivity" />

@@ -24,11 +24,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
 public class DataInActivity extends AppCompatActivity {
-    TextView tvShowData;
+    TextView tvShowData; //list클릭시 파일내용 보여줄 TextView
     ListView listviewData;
 
     String sdcardBookTagPath = Environment.getExternalStorageDirectory().getPath() + "/BookTag/"; //저장경로
@@ -47,6 +50,23 @@ public class DataInActivity extends AppCompatActivity {
 
         SdcardBookList();
 
+        listviewData.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String bookname;
+                String strText = (String) parent.getItemAtPosition(position) ; //리스트이름
+                try {
+                    FileInputStream fileInputStream = new FileInputStream(sdcardBookTagPath + strText); //
+                    byte[] txt = new byte[fileInputStream.available()];
+                    fileInputStream.read(txt);
+                    tvShowData.setText(new String(txt));
+                    fileInputStream.close();
+
+                } catch (IOException e) {
+                    Toast.makeText(getApplicationContext(), "오류", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
     } //onCreate END
 
@@ -62,9 +82,9 @@ public class DataInActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        String sdcardPath = Environment.getRootDirectory().getAbsolutePath() + "/BookTag";
+/*        String sdcardPath = Environment.getRootDirectory().getAbsolutePath() + "/BookTag";
         File[] files = (new File(sdcardPath).listFiles());
-        String strFileName;
+        String strFileName;*/ //???????????????????????????????????????????????????????????????
 
         switch (item.getItemId()) {
             case android.R.id.home:
@@ -82,8 +102,7 @@ public class DataInActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public static class Books extends SQLiteOpenHelper {
-
+   /* public static class Books extends SQLiteOpenHelper {
         public Books(@Nullable Context context) {
             super(context, "UserDB", null, 1);
         }
@@ -95,9 +114,8 @@ public class DataInActivity extends AppCompatActivity {
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
         }
-    }
+    }*/
 
     void SdcardBookList() {
         final ArrayList<String> bookName = new ArrayList<String>();// text파일 이름
@@ -120,8 +138,6 @@ public class DataInActivity extends AppCompatActivity {
             }
         });
         listviewData.setAdapter(adapter);
-
-
     }
 
 
