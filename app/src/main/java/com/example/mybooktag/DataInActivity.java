@@ -1,40 +1,32 @@
 package com.example.mybooktag;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 
 public class DataInActivity extends AppCompatActivity {
     TextView tvShowData; //list클릭시 파일내용 보여줄 TextView
-    TextView tvFileNum;
+    TextView tvFileCount;
     ListView listviewData;
-    int fileNum=0;
+    int fileCount=0;
 
     String sdcardBookTagPath = Environment.getExternalStorageDirectory().getPath() + "/BookTag/"; //sd카드의 파일 저장경로
 
@@ -44,7 +36,7 @@ public class DataInActivity extends AppCompatActivity {
         setContentView(R.layout.activity_data_in);
 
         tvShowData = (TextView) findViewById(R.id.tvShowData);
-        tvFileNum = (TextView) findViewById(R.id.tvFileNum);
+        tvFileCount = (TextView) findViewById(R.id.tvFileCount);
         listviewData = (ListView) findViewById(R.id.listviewData);
 
         ActionBar actionBar = getSupportActionBar();
@@ -102,7 +94,7 @@ public class DataInActivity extends AppCompatActivity {
     }*/
 
     void SdcardBookList() {
-
+        //file = new File(sdcardPath + "/Diary").listFiles(); // sdcardPath(절대값)에 생성
         final ArrayList<String> bookName = new ArrayList<String>();// text파일 이름
         File[] listFile = new File(sdcardBookTagPath).listFiles(); //sdcardBookTagPath의 경로에있는 파일을 불러옴
         String fileName, extName; //
@@ -112,7 +104,7 @@ public class DataInActivity extends AppCompatActivity {
             extName = fileName.substring(fileName.length() - 3); //확장자만 걸러옴
             if (extName.equals("txt")) { //걸러온 확장자가 'txt' 단어이면 참
                 bookName.add(fileName);
-                fileNum++;
+                fileCount++;
             }
         }
 
@@ -134,8 +126,8 @@ public class DataInActivity extends AppCompatActivity {
                 }
             }
         });
-        tvFileNum.setText(fileNum); //????????????오류
-        adapter.notifyDataSetChanged();
+    //    tvFileCount.setText(fileCount); //????????????오류
+        adapter.notifyDataSetChanged(); //갱신
         listviewData.setAdapter(adapter);
     }
 }

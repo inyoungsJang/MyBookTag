@@ -13,17 +13,22 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button btnBooktag, btnEnd, btnUserInfo, btnDataIn; //
+
     View dialogView;
     EditText edtUserInfo_DialogAct, edtUserName_DialogAct; // dialog꺼
+    ImageView ivSpeakerIcon;
+    ImageView imgDataIn, imgUserInfo, imgEnd, imgStart;
+    MediaPlayer mediaPlayer;
 
     SQLiteDatabase sqlDB;
     UserDB userDB;
@@ -35,15 +40,35 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        btnBooktag = (Button) findViewById(R.id.btnBooktag);
-        btnEnd = (Button) findViewById(R.id.btnEnd);
-        btnUserInfo = (Button) findViewById(R.id.btnUserInfo);
-        btnDataIn = (Button) findViewById(R.id.btnDataIn);
+        imgStart = (ImageView) findViewById(R.id.imgStart);
+        imgUserInfo = (ImageView) findViewById(R.id.imgUserInfo);
+        imgDataIn = (ImageView) findViewById(R.id.imgDataIn);
+        imgEnd = (ImageView) findViewById(R.id.imgEnd);
+        ivSpeakerIcon = (ImageView) findViewById(R.id.ivSpeakerIcon);
         userDB = new UserDB(this);
+        mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.bolero);
 
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, MODE_PRIVATE); //접근성 동의
 
-        btnDataIn.setOnClickListener(new View.OnClickListener() {
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.hide();
+
+        ivSpeakerIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!(mediaPlayer.isPlaying())) { //만약, 미디어플레이가 실행중이 아니면 참
+                    ivSpeakerIcon.setImageResource(R.drawable.unspeaker3); //
+                    mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.bolero);
+                    mediaPlayer.setLooping(true); //무한반복
+                    mediaPlayer.start();
+                } else {
+                    ivSpeakerIcon.setImageResource(R.drawable.speaker3); //
+                    mediaPlayer.stop();
+                }
+            }
+        });
+
+        imgDataIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), DataInActivity.class);
@@ -51,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        btnUserInfo.setOnClickListener(new View.OnClickListener() {
+        imgUserInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(MainActivity.this);
@@ -66,28 +91,20 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         sqlDB = userDB.getWritableDatabase();
-
-                        sqlDB.execSQL("INSERT OR REPLACE INTO UserTBL (UserName, UserInfo) VALUES ( '" + edtUserName_DialogAct.getText().toString() + "','" + edtUserInfo_DialogAct.getText().toString() + "');");
-                        Toast.makeText(getApplicationContext(), "저장되었습니다", Toast.LENGTH_SHORT).show();
-                        sqlDB = userDB.getReadableDatabase(); //userDB읽기
-
-                        sqlDB.rawQuery("SELECT * FROM UserTBL", null);
                         Cursor cursor = sqlDB.rawQuery("SELECT * FROM UserTBL", null);
 
-                        if (cursor != null && cursor.moveToFirst()) {
-                            cursor.moveToLast(); //마지막 데이타를 읽엉어옴
-                            userName = cursor.getString(0);
-                            userInfo = cursor.getString(1);
+
+                        if (edtUserName_DialogAct.getText().toString().equals("")) {
+                            Toast.makeText(getApplicationContext(), "사용자이름을 적어주세요", Toast.LENGTH_SHORT).show();
+                        } else {
+                            sqlDB = userDB.getReadableDatabase(); //userDB읽기
+                            sqlDB.execSQL("INSERT OR REPLACE INTO UserTBL (UserName, UserInfo) VALUES ( '" + edtUserName_DialogAct.getText().toString() + "','" + edtUserInfo_DialogAct.getText().toString() + "');");
+                            sqlDB.rawQuery("SELECT * FROM UserTBL", null);
+                            Toast.makeText(getApplicationContext(), "저장되었습니다", Toast.LENGTH_SHORT).show();
                         }
-                        edtUserName_DialogAct.setHint(userName);
-                        edtUserInfo_DialogAct.setHint(userInfo);
+
                         sqlDB.close();
                         cursor.close();
-
-
-                        // 저장 버튼 누를시 동작되는
-                        //  edtUserInfo_DialogAct,edtUserName_DialogAct 의 입력값을 ChoiceAct의 tvUserName_ChoiceAct,tvUserInfo_ChoiceAct에 넘겨줌
-                        //1120 DB // 1125 // 1126// 1127 //1202!!!!
                     }
                 });
                 dialogBuilder.show();
@@ -95,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        btnBooktag.setOnClickListener(new View.OnClickListener() { // btnBooktag클릭시 ChoiceAct로 이동
+        imgStart.setOnClickListener(new View.OnClickListener() { // btnBooktag클릭시 ChoiceAct로 이동
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), ChoiceActivity.class);
@@ -103,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        btnEnd.setOnClickListener(new View.OnClickListener() { //종료
+        imgEnd.setOnClickListener(new View.OnClickListener() { //종료
             @Override
             public void onClick(View v) {
                 finish();
@@ -114,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static class UserDB extends SQLiteOpenHelper {
         public UserDB(@Nullable Context context) {
-            super(context, "UserDB", null, 1);
+            super(context, "UserDB", null, 1);//다이어로그에 저장되는값 DB
         }
 
         @Override

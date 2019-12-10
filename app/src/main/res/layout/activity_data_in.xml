@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/memo"/>
         <TextView
-            android:id="@+id/tvFileNum"
+            android:id="@+id/tvFileCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="몇개"/>

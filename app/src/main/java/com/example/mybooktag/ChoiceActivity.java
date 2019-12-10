@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.GridLayout;
@@ -26,8 +27,9 @@ public class ChoiceActivity extends AppCompatActivity {
     Button btnBack_ChoiceAct;
     TextView tvUserName_ChoiceAct, tvUserInfo_ChoiceAct;
     GridView gridView;
-    GridLayout gridLayout;
-    Integer[] bookImgID = {R.drawable.berry1, R.drawable.berry2, R.drawable.berry3, R.drawable.berry4};
+    //  GridLayout gridLayout;
+    Integer[] bookImgID = {R.drawable.bookimage, R.drawable.berry2, R.drawable.berry3, R.drawable.berry4, R.drawable.bookimage, R.drawable.bookimage, R.drawable.bookimage, R.drawable.bookimage,R.drawable.bookimage,R.drawable.bookimage,R.drawable.bookimage,R.drawable.bookimage,R.drawable.bookimage,R.drawable.bookimage,R.drawable.bookimage,R.drawable.bookimage,};
+    int[] bookOpen;
 
     String userName, userInfo;
     MainActivity.UserDB userDB;
@@ -66,6 +68,7 @@ public class ChoiceActivity extends AppCompatActivity {
         sqlDB.close();
         cursor.close();
 
+
     } //onCreate END
 
     @Override
@@ -74,7 +77,6 @@ public class ChoiceActivity extends AppCompatActivity {
             case android.R.id.home:
                 finish();
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -101,22 +103,27 @@ public class ChoiceActivity extends AppCompatActivity {
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
 
             Display display = ((WindowManager) getSystemService(WINDOW_SERVICE)).getDefaultDisplay(); // 기기의 화면 사이즈 정보
-            int x = display.getWidth() / 5; //기기의 화면사이즈 정보의 가로길이 나누기 5
-            int y = x * 2;
+            int x = display.getWidth() / 3; //기기의 화면사이즈 정보의 가로길이 나누기 3
 
-            ImageView imageView = new ImageView(context);
-            imageView.setLayoutParams(new GridView.LayoutParams(x, y));
+
+            final ImageView imageView = new ImageView(context);
+            imageView.setLayoutParams(new GridView.LayoutParams(x, x));
+
             imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-            imageView.setPadding(20, 20, 20, 20);
             imageView.setImageResource(bookImgID[position]);
 
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final Intent intent = new Intent(getApplicationContext(), BookStoryActivity.class);
+                    startActivity(intent);
+                }
+            });
             return imageView;
         }
     }
-
-
 }
 
