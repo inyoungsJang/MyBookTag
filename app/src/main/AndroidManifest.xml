@@ -13,7 +13,7 @@
         android:theme="@style/MyAppTheme">
         <activity android:name=".BookStoryActivity"></activity>
         <activity android:name=".FileDeleteActivity" />
-        <activity android:name=".FileUpgradeActivity" />
+        <activity android:name=".FileWhatActivity" />
         <activity android:name=".DataInActivity" />
         <activity android:name=".ChoiceActivity" />
         <activity android:name=".SplashActivity" />

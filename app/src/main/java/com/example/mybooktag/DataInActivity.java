@@ -66,9 +66,9 @@ public class DataInActivity extends AppCompatActivity {
             case android.R.id.home: //안드로이드스튜디오에서 지원해주는 메서드를이용하여, 액션바 뒤로가기버튼 클릭시 홈으로
                 finish();
                 break;
-            case R.id.item_Upgrade:
-                Intent intentUpgrade = new Intent(getApplicationContext(), FileUpgradeActivity.class);
-                startActivity(intentUpgrade);
+            case R.id.item_what:
+                Intent intentWhat = new Intent(getApplicationContext(), FileWhatActivity.class);
+                startActivity(intentWhat);
                 break;
             case R.id.item_Delete:
                 Intent intentDelete = new Intent(getApplicationContext(), FileDeleteActivity.class);
