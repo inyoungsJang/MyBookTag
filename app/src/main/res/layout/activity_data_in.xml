@@ -30,15 +30,14 @@
         <ListView
             android:id="@+id/listviewData"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="match_parent" />
 
     </LinearLayout>
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="450dp"
         android:layout_marginTop="10dp"
-        android:layout_weight="1"
         android:background="#eeeeee"
         android:paddingLeft="5dp"
         android:paddingTop="5dp"
