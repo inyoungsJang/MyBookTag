@@ -37,15 +37,12 @@ public class DataInActivity extends AppCompatActivity {
     EditText edtCreateFile_CreatefileAct;
     ListView listviewData;
     View dialogView;
-    MenuItem createfile; //다이어로그의 메뉴이미지
-    // public static Context context;
 
     SQLiteDatabase sqlDB;
     UserFileDB userFileDB;
     File file; //폴더
     String fileNameMake; //사용자가 생성할 폴더의 이름
     String sdcardBookTagPath; //사용자가 생성한 폴더의 경로
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +51,6 @@ public class DataInActivity extends AppCompatActivity {
         sdcardBookTagPath = Environment.getExternalStorageDirectory().getPath();
         tvShowData = (TextView) findViewById(R.id.tvShowData);
         listviewData = (ListView) findViewById(R.id.listviewData);
-        //   context = this;
 
         userFileDB = new UserFileDB(getApplicationContext());
 
@@ -78,7 +74,6 @@ public class DataInActivity extends AppCompatActivity {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.datainmenu, menu);
         return true;
-
     }
 
     @Override
@@ -99,7 +94,6 @@ public class DataInActivity extends AppCompatActivity {
                 final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(DataInActivity.this);
                 dialogView = (View) View.inflate(DataInActivity.this, R.layout.createfile, null); //dialog_userinfo(커스텀 다이어로그)inflate
                 // TODO: 2019-12-23 item_CreateFile 클릭시 enabled 적용 또는 file이 존재하면 enabled 적용
-                // createfile=(MenuItem) View.inflate(DataInActivity.this,R.menu.datainmenu,null); //??????
                 edtCreateFile_CreatefileAct = (EditText) dialogView.findViewById(R.id.edtCreateFile_CreatefileAct);
 
                 dialogBuilder.setView(dialogView); //세팅
@@ -126,12 +120,9 @@ public class DataInActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
     void SdcardBookList() {
-        //    file = new File(sdcardBookTagPath + "/" + saveFile);
         String fileName, extName; //
         String saveFile = "";
-
 
         sqlDB = userFileDB.getWritableDatabase(); //오픈
         Cursor cursor = sqlDB.rawQuery("SELECT * FROM UserFileTBL;", null); //파일 이름가져옴
@@ -145,7 +136,6 @@ public class DataInActivity extends AppCompatActivity {
             file = new File(sdcardBookTagPath + "/" + saveFile);
             // Toast.makeText(getApplicationContext(),"예외!!",Toast.LENGTH_SHORT).show();
         }
-
 
         //   if (cursor != null && cursor.moveToFirst()) { //cursor에 값이 있는경우
         if (file.exists()) { //폴더가 존재하면
@@ -187,27 +177,20 @@ public class DataInActivity extends AppCompatActivity {
         }
     }
 
-
     public static class UserFileDB extends SQLiteOpenHelper {
         public UserFileDB(@Nullable Context context) {
             super(context, "UserFileDB", null, 1);//다이어로그에 저장되는값 DB
         }
-
         @Override
         public void onCreate(SQLiteDatabase db) {
             db.execSQL("CREATE TABLE UserFileTBL (UserFileName TEXT PRIMARY KEY);"); //UserFile TBL Table생성
         }
-
         @Override
-        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
-        }
-
+        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {     }
         @Override
         public SQLiteDatabase getWritableDatabase() {
             return super.getWritableDatabase();
         }
-
         @Override
         public SQLiteDatabase getReadableDatabase() {
             return super.getReadableDatabase();

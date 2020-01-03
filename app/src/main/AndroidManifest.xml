@@ -11,8 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/MyAppTheme">
-        <activity android:name=".CustomGridView"></activity>
-        <activity android:name=".CreateFileActivity" />
+        <activity android:name=".OpenBookActivity"></activity>
+        <activity android:name=".CustomGridView" />
         <activity android:name=".BookStoryActivity" />
         <activity android:name=".FileDeleteActivity" />
         <activity android:name=".FileWhatActivity" />

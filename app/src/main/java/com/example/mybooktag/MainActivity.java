@@ -16,8 +16,10 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.speech.RecognizerIntent;
 import android.view.Display;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -36,34 +38,35 @@ public class MainActivity extends AppCompatActivity {
     TextView tvUserName_ChoiceAct, tvUserInfo_ChoiceAct;
     TextView tvVoice, tvSearch, tvGoogle;
     GridView gridView;
-    Integer[] bookImgID = {R.drawable.bookimage, R.drawable.berry2, R.drawable.berry3, R.drawable.berry4, R.drawable.bookimage, R.drawable.bookimage, R.drawable.bookimage, R.drawable.bookimage, R.drawable.bookimage, R.drawable.bookimage, R.drawable.bookimage, R.drawable.bookimage, R.drawable.bookimage, R.drawable.bookimage, R.drawable.bookimage, R.drawable.bookimage,};
-
+    ImageView icon;
 
     View dialogView;
     EditText edtUserInfo_DialogAct, edtUserName_DialogAct; // dialog꺼
     ImageView ivSpeakerIcon;
-  //  ImageView imgDataIn, imgUserInfo, imgEnd, imgStart; //초기화면의 버튼이미지
-    TextView tvDataIn,tvUserInfo,tvEnd;
+    //  ImageView imgDataIn, imgUserInfo, imgEnd, imgStart; //초기화면의 버튼이미지
+    TextView tvDataIn, tvUserInfo, tvEnd;
     MediaPlayer mediaPlayer;
 
-    SQLiteDatabase sqlDB, sqlDB2;
+    SQLiteDatabase sqlDB;
     UserDB userDB;
     String userName;
     String userInfo;
 
+    DataInActivity.UserFileDB userFileDB;
+    SQLiteDatabase sqlDB2;
+    String saveFile = ""; //사용자가 저장한 폴더명
+    String sdcardBookTagPath; //사용자가 생성한 폴더의 경로
+    TextView tvBookName_customGridAct;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        imgStart = (ImageView) findViewById(R.id.imgStart);
-//        imgUserInfo = (ImageView) findViewById(R.id.imgUserInfo);
-//        imgDataIn = (ImageView) findViewById(R.id.imgDataIn);
-//        imgEnd = (ImageView) findViewById(R.id.imgEnd);
-        tvDataIn=(TextView)findViewById(R.id.tvDataIn);
-        tvUserInfo=(TextView)findViewById(R.id.tvUserInfo);
-        tvEnd=(TextView)findViewById(R.id.tvEnd);
+        tvDataIn = (TextView) findViewById(R.id.tvDataIn);
+        tvUserInfo = (TextView) findViewById(R.id.tvUserInfo);
+        tvEnd = (TextView) findViewById(R.id.tvEnd);
+        icon=(ImageView)findViewById(R.id.icon);
 
         gridView = (GridView) findViewById(R.id.bookImg);
         tvUserInfo_ChoiceAct = (TextView) findViewById(R.id.tvUserInfo_ChoiceAct);
@@ -72,22 +75,51 @@ public class MainActivity extends AppCompatActivity {
         tvSearch = (TextView) findViewById(R.id.tvSearch);
         tvVoice = (TextView) findViewById(R.id.tvVoice);
 
-
         ivSpeakerIcon = (ImageView) findViewById(R.id.ivSpeakerIcon);
         userDB = new UserDB(this);
         mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.bolero);
 
+        sdcardBookTagPath = Environment.getExternalStorageDirectory().getPath(); //경로로
+
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, MODE_PRIVATE); //접근성 동의
 
-        Intent intent = new Intent(getApplicationContext(), SplashActivity.class);
+        Intent intent = new Intent(getApplicationContext(), SplashActivity.class); //로딩화면
         startActivity(intent);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
 
-        ///      ((DataInActivity)DataInActivity.context).SdcardBookList();
+        icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getApplicationContext(),"인영이가 만들었떠zzz",Toast.LENGTH_SHORT).show();
+            }
+        });
 
-//    File file = new File()
+        userFileDB = new DataInActivity.UserFileDB(getApplicationContext());
+
+        sqlDB2 = userFileDB.getReadableDatabase(); //읽다
+        Cursor cursor2 = sqlDB2.rawQuery("SELECT * FROM UserFileTBL;", null); //폴더명 가져옴
+        if (cursor2 != null && cursor2.moveToFirst()) {
+            cursor2.moveToFirst();
+            saveFile = cursor2.getString(0); //폴더명
+        } else {
+            Toast.makeText(getApplicationContext(), "오류", Toast.LENGTH_SHORT).show();
+        }
+
+        sqlDB2.close();
+        cursor2.close();
+
+
+        File[] listFile = new File(sdcardBookTagPath + "/" + saveFile).listFiles(); //sdcardBookTagPath의 경로에있는 파일명을 불러옴
+        ArrayList<String> strings = new ArrayList<String>();
+
+        for (int i = 0; i < listFile.length; i++) {
+            strings.add(listFile[i].getName());
+        }
+
+        BookImage bookImage = new BookImage(this, strings);
+        gridView.setAdapter(bookImage);
 
         ivSpeakerIcon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,6 +135,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
 
         tvDataIn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -151,8 +184,6 @@ public class MainActivity extends AppCompatActivity {
 
         load();
 
-
-
         tvEnd.setOnClickListener(new View.OnClickListener() { //종료
             @Override
             public void onClick(View v) {
@@ -160,15 +191,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
         tvVoice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);//
                 intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM); //암시적인텐트 호출
-
                 intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "마이크");
-
                 startActivityForResult(intent, 50);
             }
         });
@@ -189,11 +217,9 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        BookImage bookImage = new BookImage(this);
-        gridView.setAdapter(bookImage);
     } //onCreate END
 
-    void load(){
+    void load() {
         sqlDB = userDB.getReadableDatabase(); //userDB읽기
         sqlDB.rawQuery("SELECT * FROM UserTBL", null);
         Cursor cursor;
@@ -209,7 +235,7 @@ public class MainActivity extends AppCompatActivity {
 
         sqlDB.close();
         cursor.close();
-      //  adapter.notifyDataSetChanged();
+        //  adapter.notifyDataSetChanged();
     }
 
     public static class UserDB extends SQLiteOpenHelper {
@@ -229,17 +255,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
     public class BookImage extends BaseAdapter {
-        Context context;
 
-        public BookImage(Context context) {
+        Context context;
+        LayoutInflater layoutInflater;
+        ArrayList<String> strings;
+
+        //        public BookImage(Context context) {
+//            this.context = context;
+//            layoutInflater = LayoutInflater.from(context);
+//        }
+        public BookImage(Context context, ArrayList<String> strings) {
             this.context = context;
+            layoutInflater = LayoutInflater.from(context);
+            this.strings = strings;
         }
 
         @Override
         public int getCount() {
-            return bookImgID.length;
+            return strings.size();
         } //bookImgID의 배열길이 만큼 Count
 
         @Override
@@ -254,24 +288,27 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
+            View myView = layoutInflater.inflate(R.layout.activity_custom_grid_view, null, false);
+
+            tvBookName_customGridAct = (TextView) myView.findViewById(R.id.tvBookName_customGridAct);
+
+            tvBookName_customGridAct.setText(strings.get(position));
 
             Display display = ((WindowManager) getSystemService(WINDOW_SERVICE)).getDefaultDisplay(); // 기기의 화면 사이즈 정보
             int x = display.getWidth() / 3; //기기의 화면사이즈 정보의 가로길이 나누기 3
 
-            final ImageView imageView = new ImageView(context);
-            imageView.setLayoutParams(new GridView.LayoutParams(x, x));
+            myView.setLayoutParams(new GridView.LayoutParams(x, x));
 
-            imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-            imageView.setImageResource(bookImgID[position]);
-
-            imageView.setOnClickListener(new View.OnClickListener() {
+            myView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    final Intent intent = new Intent(getApplicationContext(), BookStoryActivity.class);
+                    final Intent intent = new Intent(getApplicationContext(),OpenBookActivity.class);
+                    intent.putExtra("FILENAME",strings.get(position));
+                    intent.putExtra("SAVEFILE",saveFile);
                     startActivity(intent);
                 }
             });
-            return imageView;
+            return myView;
         }
     }
 
