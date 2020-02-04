@@ -18,6 +18,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.speech.RecognizerIntent;
+import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,7 +44,6 @@ public class MainActivity extends AppCompatActivity {
     View dialogView;
     EditText edtUserInfo_DialogAct, edtUserName_DialogAct; // dialog꺼
     ImageView ivSpeakerIcon;
-    //  ImageView imgDataIn, imgUserInfo, imgEnd, imgStart; //초기화면의 버튼이미지
     TextView tvDataIn, tvUserInfo, tvEnd;
     MediaPlayer mediaPlayer;
 
@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         tvDataIn = (TextView) findViewById(R.id.tvDataIn);
         tvUserInfo = (TextView) findViewById(R.id.tvUserInfo);
         tvEnd = (TextView) findViewById(R.id.tvEnd);
-        icon=(ImageView)findViewById(R.id.icon);
+        icon = (ImageView) findViewById(R.id.icon);
 
         gridView = (GridView) findViewById(R.id.bookImg);
         tvUserInfo_ChoiceAct = (TextView) findViewById(R.id.tvUserInfo_ChoiceAct);
@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
         icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(),"인영이가 만들었떠zzz",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "얏홍", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -109,7 +109,6 @@ public class MainActivity extends AppCompatActivity {
 
         sqlDB2.close();
         cursor2.close();
-
 
         File[] listFile = new File(sdcardBookTagPath + "/" + saveFile).listFiles(); //sdcardBookTagPath의 경로에있는 파일명을 불러옴
         ArrayList<String> strings = new ArrayList<String>();
@@ -235,7 +234,6 @@ public class MainActivity extends AppCompatActivity {
 
         sqlDB.close();
         cursor.close();
-        //  adapter.notifyDataSetChanged();
     }
 
     public static class UserDB extends SQLiteOpenHelper {
@@ -302,10 +300,11 @@ public class MainActivity extends AppCompatActivity {
             myView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    final Intent intent = new Intent(getApplicationContext(),OpenBookActivity.class);
-                    intent.putExtra("FILENAME",strings.get(position));
-                    intent.putExtra("SAVEFILE",saveFile);
+                    final Intent intent = new Intent(getApplicationContext(), OpenBookActivity.class);
+                    intent.putExtra("FILENAME", strings.get(position));
+                    intent.putExtra("SAVEFILE", saveFile);
                     startActivity(intent);
+                    Log.i("putIntent","인텐트 무사히 실행 ok");
                 }
             });
             return myView;
