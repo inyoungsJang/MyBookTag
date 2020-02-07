@@ -46,14 +46,15 @@ public class MainActivity extends AppCompatActivity {
     ImageView ivSpeakerIcon;
     TextView tvDataIn, tvUserInfo, tvEnd;
     MediaPlayer mediaPlayer;
+    File file; //폴더
 
     SQLiteDatabase sqlDB;
     UserDB userDB;
     String userName;
     String userInfo;
 
-    DataInActivity.UserFileDB userFileDB;
-    SQLiteDatabase sqlDB2;
+    // DataInActivity.UserFileDB userFileDB;
+    // SQLiteDatabase sqlDB2;
     String saveFile = ""; //사용자가 저장한 폴더명
     String sdcardBookTagPath; //사용자가 생성한 폴더의 경로
     TextView tvBookName_customGridAct;
@@ -96,26 +97,48 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        userFileDB = new DataInActivity.UserFileDB(getApplicationContext());
+        //userFileDB = new DataInActivity.UserFileDB(getApplicationContext());
 
-        sqlDB2 = userFileDB.getReadableDatabase(); //읽다
-        Cursor cursor2 = sqlDB2.rawQuery("SELECT * FROM UserFileTBL;", null); //폴더명 가져옴
-        if (cursor2 != null && cursor2.moveToFirst()) {
-            cursor2.moveToFirst();
-            saveFile = cursor2.getString(0); //폴더명
-        } else {
-            Toast.makeText(getApplicationContext(), "오류", Toast.LENGTH_SHORT).show();
-        }
-
-        sqlDB2.close();
-        cursor2.close();
-
-        File[] listFile = new File(sdcardBookTagPath + "/" + saveFile).listFiles(); //sdcardBookTagPath의 경로에있는 파일명을 불러옴
+        //   sqlDB2 = userFileDB.getReadableDatabase(); //읽다
+        // Cursor cursor2 = sqlDB2.rawQuery("SELECT * FROM UserFileTBL;", null); //폴더명 가져옴
+        File[] listFile = new File(sdcardBookTagPath + "/" + "mybooktag").listFiles(); //sdcardBookTagPath의 경로에있는 파일명을 불러옴
         ArrayList<String> strings = new ArrayList<String>();
-
-        for (int i = 0; i < listFile.length; i++) {
-            strings.add(listFile[i].getName());
+        file = new File(sdcardBookTagPath + "/" + "mybooktag");
+        if (file.exists()) {
+            for (int i = 0; i < listFile.length; i++) {
+                strings.add(listFile[i].getName());
+            }
+        } else {
+            file.mkdir(); //폴더생성
         }
+
+
+//        if (cursor2 != null && cursor2.moveToFirst()) {
+//            cursor2.moveToFirst();
+//            saveFile = cursor2.getString(0); //폴더명
+//            for (int i = 0; i < listFile.length; i++) {
+//              strings.add(listFile[i].getName());
+//            }
+//        } else {
+//            Toast.makeText(getApplicationContext(), "오류", Toast.LENGTH_SHORT).show();
+//        }
+
+
+//        file = new File(sdcardBookTagPath + "/" + "mybooktag");
+//        if (!file.exists()) {
+//            file.mkdir(); //폴더생성
+//            Toast.makeText(getApplicationContext(), "폴더가 생성되었습니다", Toast.LENGTH_SHORT).show();
+//        }
+
+        //  sqlDB2.close();
+        //cursor2.close();
+
+//        File[] listFile = new File(sdcardBookTagPath + "/" + saveFile).listFiles(); //sdcardBookTagPath의 경로에있는 파일명을 불러옴
+//        ArrayList<String> strings = new ArrayList<String>();
+//
+//        for (int i = 0; i < listFile.length; i++) {
+//            strings.add(listFile[i].getName());
+//        }
 
         BookImage bookImage = new BookImage(this, strings);
         gridView.setAdapter(bookImage);
@@ -259,10 +282,6 @@ public class MainActivity extends AppCompatActivity {
         LayoutInflater layoutInflater;
         ArrayList<String> strings;
 
-        //        public BookImage(Context context) {
-//            this.context = context;
-//            layoutInflater = LayoutInflater.from(context);
-//        }
         public BookImage(Context context, ArrayList<String> strings) {
             this.context = context;
             layoutInflater = LayoutInflater.from(context);
@@ -304,7 +323,7 @@ public class MainActivity extends AppCompatActivity {
                     intent.putExtra("FILENAME", strings.get(position));
                     intent.putExtra("SAVEFILE", saveFile);
                     startActivity(intent);
-                    Log.i("putIntent","인텐트 무사히 실행 ok");
+                    Log.i("putIntent", "인텐트 무사히 실행 ok");
                 }
             });
             return myView;

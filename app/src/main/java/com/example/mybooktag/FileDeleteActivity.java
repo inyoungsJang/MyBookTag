@@ -32,9 +32,11 @@ public class FileDeleteActivity extends AppCompatActivity {
     File[] listFile; //sdcardBookTagPath의 경로에있는 파일을 불러옴
     String strText; //리스트 파일이름 담을 변수
     String saveFile = "";
+    String fileName;
+    File file;
 
     SQLiteDatabase sqlDB;
-    DataInActivity.UserFileDB userFileDB;
+   // DataInActivity.UserFileDB userFileDB;
 
     ArrayList<String> bookName;
     ArrayAdapter<String> adapter;
@@ -50,26 +52,40 @@ public class FileDeleteActivity extends AppCompatActivity {
         tvDeleteFileName = (TextView) findViewById(R.id.tvDeleteFileName);
 
         sdcardBookTagPath = Environment.getExternalStorageDirectory().getPath(); //파일 경로
-        userFileDB = new DataInActivity.UserFileDB(getApplicationContext());
-        sqlDB = userFileDB.getReadableDatabase(); //DB읽기
+//        userFileDB = new DataInActivity.UserFileDB(getApplicationContext());
+//        sqlDB = userFileDB.getReadableDatabase(); //DB읽기
 
-        Cursor cursor = sqlDB.rawQuery("SELECT * FROM UserFileTBL;", null); //UserFileTBL에 저장된 파일명가져오기위해
-        cursor.moveToFirst(); //최초값
-        saveFile = cursor.getString(0); //saveFile에 0번째인덱스값을 저장
+//        Cursor cursor = sqlDB.rawQuery("SELECT * FROM UserFileTBL;", null); //UserFileTBL에 저장된 파일명가져오기위해
+//        cursor.moveToFirst(); //최초값
+//        saveFile = cursor.getString(0); //saveFile에 0번째인덱스값을 저장
 
-        listFile = new File(sdcardBookTagPath + "/" + saveFile).listFiles(); //sdcardBookTagPath의 경로에있는 파일을 불러옴
-
+        listFile = new File(sdcardBookTagPath + "/" + "mybooktag").listFiles(); //sdcardBookTagPath의 경로에있는 파일을 불러옴
+        file = new File(sdcardBookTagPath + "/" + "mybooktag");
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle("삭제할 도서 선택");
 
         SdcardBookList();
 
+        if (file.exists()) {
+            bookName = new ArrayList<String>();// text파일 이름
+            File[] listFile = new File(sdcardBookTagPath + "/" + "mybooktag").listFiles(); //sdcardBookTagPath의 경로에있는 파일을 불러옴
+            for (File file : listFile) {
+                fileName = file.getName(); //파일이름
+//                extName = fileName.substring(fileName.length() - 3); //확장자만 걸러옴
+//                if (extName.equals("txt") || extName.equals("tml")) { //걸러온 확장자가 'txt' 단어이면 참
+                bookName.add(fileName);
+//                tvBookName_customGridAct.setText(fileName);
+                //  }
+            }
+        }
+
         btnFileDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
-                    File file = new File(sdcardBookTagPath + "/" + saveFile + "/" + strText); //항목
+               //     String strText = (String) parent.getItemAtPosition(position); //리스트이름
+                    File file = new File(sdcardBookTagPath + "/" + "mybooktag" + "/" + strText); //항목
                     file.delete();
                     bookName.remove(strText); // 삭제
                     adapter.notifyDataSetChanged(); //갱신
@@ -89,7 +105,6 @@ public class FileDeleteActivity extends AppCompatActivity {
             case android.R.id.home:
                 finish();
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -112,11 +127,11 @@ public class FileDeleteActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 strText = (String) parent.getItemAtPosition(position); //리스트이름
                 try {
-                    FileInputStream fileInputStream = new FileInputStream(sdcardBookTagPath + "/" + saveFile + "/" + strText); //fileInputStream에 읽어올 파일 대입
+                    FileInputStream fileInputStream = new FileInputStream(sdcardBookTagPath + "/" + "mybooktag" + "/" + strText); //fileInputStream에 읽어올 파일 대입
                     // TODO: 2019-12-17 삭제추가해야함
                     tvDeleteFileName.setText(strText);
                     fileInputStream.close();
-
+                    adapter.notifyDataSetChanged(); //갱신
                 } catch (IOException e) {
                     Toast.makeText(getApplicationContext(), "오류!", Toast.LENGTH_SHORT).show();
                 }
