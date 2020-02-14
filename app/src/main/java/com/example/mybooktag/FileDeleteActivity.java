@@ -9,6 +9,7 @@ import android.database.CursorIndexOutOfBoundsException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -68,6 +69,7 @@ public class FileDeleteActivity extends AppCompatActivity {
         SdcardBookList();
 
         if (file.exists()) {
+     //       adapter.notifyDataSetChanged(); //갱신
             bookName = new ArrayList<String>();// text파일 이름
             File[] listFile = new File(sdcardBookTagPath + "/" + "mybooktag").listFiles(); //sdcardBookTagPath의 경로에있는 파일을 불러옴
             for (File file : listFile) {
@@ -84,10 +86,12 @@ public class FileDeleteActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try {
+                //    adapter.notifyDataSetChanged(); //갱신
                //     String strText = (String) parent.getItemAtPosition(position); //리스트이름
                     File file = new File(sdcardBookTagPath + "/" + "mybooktag" + "/" + strText); //항목
                     file.delete();
                     bookName.remove(strText); // 삭제
+                    Log.i("log","btnFileDelete.setonClick... adapter.notify ... : 갱신됌");
                     adapter.notifyDataSetChanged(); //갱신
                     Toast.makeText(FileDeleteActivity.this, strText + "삭제됌", Toast.LENGTH_SHORT).show();
                 } catch (Exception e) {
@@ -95,8 +99,6 @@ public class FileDeleteActivity extends AppCompatActivity {
                 }
             }
         });
-
-
     }//onCreate END
 
     @Override
@@ -131,13 +133,15 @@ public class FileDeleteActivity extends AppCompatActivity {
                     // TODO: 2019-12-17 삭제추가해야함
                     tvDeleteFileName.setText(strText);
                     fileInputStream.close();
+                    Log.i("log","listViewData.setonClick adapter.notify ... : 갱신됌");
                     adapter.notifyDataSetChanged(); //갱신
                 } catch (IOException e) {
                     Toast.makeText(getApplicationContext(), "오류!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
-
+     //   Log.i("log","listViewData.setonClick2... adapter.notify ... : 갱신됌");
+     //   adapter.notifyDataSetChanged(); //갱신
         listviewData.setAdapter(adapter); //adapter Set
     }
 }

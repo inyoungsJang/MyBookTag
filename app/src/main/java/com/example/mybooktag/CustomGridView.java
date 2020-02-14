@@ -43,7 +43,7 @@ public class CustomGridView extends AppCompatActivity {
         sdcardBookTagPath = Environment.getExternalStorageDirectory().getPath();
         file = new File(sdcardBookTagPath + "/" + "mybooktag");
 
-        if (file.exists()) {
+        if (file.exists()) { //폴더가 존재하면
             bookName = new ArrayList<String>();// text파일 이름
             File[] listFile = new File(sdcardBookTagPath + "/" + "mybooktag").listFiles(); //sdcardBookTagPath의 경로에있는 파일을 불러옴
             for (File file : listFile) {
@@ -52,10 +52,11 @@ public class CustomGridView extends AppCompatActivity {
 //                if (extName.equals("txt") || extName.equals("tml")) { //걸러온 확장자가 'txt' 단어이면 참
                 bookName.add(fileName);
 //                tvBookName_customGridAct.setText(fileName);
+                tvBookName_customGridAct.setText(fileName);
                 //  }
 
             }
-            tvBookName_customGridAct.setText(fileName);
+
         }
 
         //    cursor.close();

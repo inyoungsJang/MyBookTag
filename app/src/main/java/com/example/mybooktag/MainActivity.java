@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     TextView tvVoice, tvSearch, tvGoogle;
     GridView gridView;
     ImageView icon;
+    ImageView ivGalleryGo;
 
     View dialogView;
     EditText edtUserInfo_DialogAct, edtUserName_DialogAct; // dialog꺼
@@ -68,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
         tvUserInfo = (TextView) findViewById(R.id.tvUserInfo);
         tvEnd = (TextView) findViewById(R.id.tvEnd);
         icon = (ImageView) findViewById(R.id.icon);
+        ivGalleryGo=(ImageView)findViewById(R.id.ivGalleryGo);
 
         gridView = (GridView) findViewById(R.id.bookImg);
         tvUserInfo_ChoiceAct = (TextView) findViewById(R.id.tvUserInfo_ChoiceAct);
@@ -96,7 +98,13 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "얏홍", Toast.LENGTH_SHORT).show();
             }
         });
-
+        ivGalleryGo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent1 = new Intent(getApplicationContext(),GalleryActivity.class);
+                startActivity(intent1);
+            }
+        });
         //userFileDB = new DataInActivity.UserFileDB(getApplicationContext());
 
         //   sqlDB2 = userFileDB.getReadableDatabase(); //읽다
@@ -308,7 +316,6 @@ public class MainActivity extends AppCompatActivity {
             View myView = layoutInflater.inflate(R.layout.activity_custom_grid_view, null, false);
 
             tvBookName_customGridAct = (TextView) myView.findViewById(R.id.tvBookName_customGridAct);
-
             tvBookName_customGridAct.setText(strings.get(position));
 
             Display display = ((WindowManager) getSystemService(WINDOW_SERVICE)).getDefaultDisplay(); // 기기의 화면 사이즈 정보
@@ -321,7 +328,7 @@ public class MainActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     final Intent intent = new Intent(getApplicationContext(), OpenBookActivity.class);
                     intent.putExtra("FILENAME", strings.get(position));
-                    intent.putExtra("SAVEFILE", saveFile);
+             //       intent.putExtra("SAVEFILE", saveFile);
                     startActivity(intent);
                     Log.i("putIntent", "인텐트 무사히 실행 ok");
                 }

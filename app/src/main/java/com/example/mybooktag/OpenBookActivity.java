@@ -31,7 +31,7 @@ public class OpenBookActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         String fileName = intent.getStringExtra("FILENAME"); //파일이름
-        String saveFile = intent.getStringExtra("SAVEFILE"); //폴더이름
+       // String saveFile = intent.getStringExtra("SAVEFILE"); //폴더이름
 
         tvBookName.setText(fileName);
 
@@ -41,13 +41,13 @@ public class OpenBookActivity extends AppCompatActivity {
 
 
         try {
-            FileInputStream fileInputStream = new FileInputStream(sdcardBookTagPath + "/" + saveFile + "/" + fileName); //fileInputStream에 읽어올 파일 대입
+            FileInputStream fileInputStream = new FileInputStream(sdcardBookTagPath + "/" + "mybooktag" + "/" + fileName); //fileInputStream에 읽어올 파일 대입
             byte[] txt = new byte[fileInputStream.available()]; //해당파일의 내용 모두
             fileInputStream.read(txt);
             tv.setText(new String(txt));
             fileInputStream.close();
         } catch (IOException e) {
-            Toast.makeText(getApplicationContext(), "오류!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "파일 내용 못 읽어옴!", Toast.LENGTH_SHORT).show();
         }
     }
 
