@@ -60,10 +60,13 @@ public class MainActivity extends AppCompatActivity {
     String sdcardBookTagPath; //사용자가 생성한 폴더의 경로
     TextView tvBookName_customGridAct;
 
+    GalleryActivity galleryActivity;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+      //  galleryActivity.tedPermission();//갤러리 권한
 
         tvDataIn = (TextView) findViewById(R.id.tvDataIn);
         tvUserInfo = (TextView) findViewById(R.id.tvUserInfo);
@@ -101,14 +104,13 @@ public class MainActivity extends AppCompatActivity {
         ivGalleryGo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent1 = new Intent(getApplicationContext(),GalleryActivity.class);
-                startActivity(intent1);
+                galleryActivity.gotoGallery();
+                ivGalleryGo.setImageBitmap(galleryActivity.setImage());
+//                Intent intent1 = new Intent(getApplicationContext(),GalleryActivity.class);
+//                startActivity(intent1);
             }
         });
-        //userFileDB = new DataInActivity.UserFileDB(getApplicationContext());
 
-        //   sqlDB2 = userFileDB.getReadableDatabase(); //읽다
-        // Cursor cursor2 = sqlDB2.rawQuery("SELECT * FROM UserFileTBL;", null); //폴더명 가져옴
         File[] listFile = new File(sdcardBookTagPath + "/" + "mybooktag").listFiles(); //sdcardBookTagPath의 경로에있는 파일명을 불러옴
         ArrayList<String> strings = new ArrayList<String>();
         file = new File(sdcardBookTagPath + "/" + "mybooktag");
@@ -120,33 +122,6 @@ public class MainActivity extends AppCompatActivity {
             file.mkdir(); //폴더생성
         }
 
-
-//        if (cursor2 != null && cursor2.moveToFirst()) {
-//            cursor2.moveToFirst();
-//            saveFile = cursor2.getString(0); //폴더명
-//            for (int i = 0; i < listFile.length; i++) {
-//              strings.add(listFile[i].getName());
-//            }
-//        } else {
-//            Toast.makeText(getApplicationContext(), "오류", Toast.LENGTH_SHORT).show();
-//        }
-
-
-//        file = new File(sdcardBookTagPath + "/" + "mybooktag");
-//        if (!file.exists()) {
-//            file.mkdir(); //폴더생성
-//            Toast.makeText(getApplicationContext(), "폴더가 생성되었습니다", Toast.LENGTH_SHORT).show();
-//        }
-
-        //  sqlDB2.close();
-        //cursor2.close();
-
-//        File[] listFile = new File(sdcardBookTagPath + "/" + saveFile).listFiles(); //sdcardBookTagPath의 경로에있는 파일명을 불러옴
-//        ArrayList<String> strings = new ArrayList<String>();
-//
-//        for (int i = 0; i < listFile.length; i++) {
-//            strings.add(listFile[i].getName());
-//        }
 
         BookImage bookImage = new BookImage(this, strings);
         gridView.setAdapter(bookImage);

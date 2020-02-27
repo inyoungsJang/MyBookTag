@@ -54,9 +54,7 @@ public class CustomGridView extends AppCompatActivity {
 //                tvBookName_customGridAct.setText(fileName);
                 tvBookName_customGridAct.setText(fileName);
                 //  }
-
             }
-
         }
 
         //    cursor.close();
