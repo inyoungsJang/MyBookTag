@@ -101,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "얏홍", Toast.LENGTH_SHORT).show();
             }
         });
+        /*
         ivGalleryGo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -109,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
 //                Intent intent1 = new Intent(getApplicationContext(),GalleryActivity.class);
 //                startActivity(intent1);
             }
-        });
+        });*/
 
         File[] listFile = new File(sdcardBookTagPath + "/" + "mybooktag").listFiles(); //sdcardBookTagPath의 경로에있는 파일명을 불러옴
         ArrayList<String> strings = new ArrayList<String>();
